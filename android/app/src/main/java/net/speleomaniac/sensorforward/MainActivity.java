@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         for (int i=0; i<sensors.size(); i++) {
             Sensor sensor = sensors.get(i);
             SensorItem item = new SensorItem();
-            item.Name = sensor.getName();
+            item.Name = sensor.getName() + "(" + sensor.getStringType() + ")";
             item.Sensor = sensor;
             item.Registered = false;
             sensorArray.add(item);
