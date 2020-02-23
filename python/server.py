@@ -3,26 +3,36 @@ from drawnow import drawnow, figure
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import datetime
-from imu2xyz import imu2V, imu2X, p2e
+from imu2xyz import imu2V, imu2X, p2e, l2gMatrix
 import numpy as np
+
+do_parse = True
+
+
+
 
 def parse_stream(line):
     STREAM_ID = {
-        '3': 'acc', # accelerometer
-        '4': 'gy', # gyroscope
-        '5': 'm', # magnetic field
-        '81': 'o', # orientation (sensor fusion)
-        '82': 'a', # linear acceleration (sensor fusion)
-        '84': 'r', # rotation vector (sensor fusion)
+        'Linear Acceleration Sensor': ['a',3], # accelerometer
+        'Samsung Rotation Vector': ['r',3], # rotation vector
+        'Samsung Rotation Vector-MATRIX': ['rm',9], # rotation matrix
     }
-    dat = line.split(b',')
+    # STREAM_ID = {
+    #     '3': 'acc', # accelerometer
+    #     '4': 'gy', # gyroscope
+    #     '5': 'm', # magnetic field
+    #     '81': 'o', # orientation (sensor fusion)
+    #     '82': 'a', # linear acceleration (sensor fusion)
+    #     '84': 'r', # rotation vector (sensor fusion)
+    # }
+    dat = line.split(b'\t')
     sensor_data = {}
-    sensor_data['t'] = float(dat[0])
-    for i in range(1,len(dat),4):
-        key = dat[i].decode('ascii').strip()
-        var = STREAM_ID[key]
-        # sensor_data[var] = [float(x) for x in dat[i+1:i+4]]
-        sensor_data[var] = [float(dat[i+2]), float(dat[i+3]),float(dat[i+1])] # order is z,x,y
+    sensor_data['t'] = float(dat[1])/.000000001 # nanoseconds
+    key = dat[2].decode('ascii').strip()
+    var = STREAM_ID[key]
+    # sensor_data[var] = [float(x) for x in dat[i+1:i+4]]
+    sensor_data[var[0]] = list(map(float,dat[3:(3+var[1])]))
+
     return sensor_data
 
 UDP_IP = "192.168.0.122"
@@ -61,7 +71,7 @@ def draw_fig():
 A=[]
 O=[]
 T=[]
-
+i=0
 acq_start = False
 while True:
     try:
@@ -72,25 +82,32 @@ while True:
         acq_start = True
         sock.settimeout(1)
     last_acq = datetime.datetime.now()
+    i+=1
     # print("received message:", line)
     # dat = data.split(b',')
-    parsed_data = parse_stream(line)
-    if 'o' in parsed_data.keys() and 'a' in parsed_data.keys() :
-        A.append(parsed_data['a'])
-        O.append(parsed_data['o'])
-        T.append(parsed_data['t'])
-        print(parsed_data)
-        # xx = parsed_data['r'][0]
-        # yy = parsed_data['r'][1]
-        # zz = parsed_data['r'][2]
-        aa = parsed_data['a']
-        rr = parsed_data['o']
-        dx,dy,dz = p2e(aa,rr)
-        if len(T)>2:
-            xx += dx * (T[-1]-T[-2])
-            yy += dy * (T[-1]-T[-2]) 
-            zz += dz * (T[-1]-T[-2])
+    if do_parse and i%20==0:
+        parsed_data = parse_stream(line)
+        if 'rm' in parsed_data.keys():
+            # A.append(parsed_data['a'])
+            # O.append(parsed_data['o'])
+            # T.append(parsed_data['t'])
+            print(parsed_data)
+            # xx = parsed_data['r'][0]
+            # yy = parsed_data['r'][1]
+            # zz = parsed_data['r'][2]
+            # aa = parsed_data['a']
+            # rr = parsed_data['r']
+            rm = parsed_data['rm']
+            unit_up = [0,0,1]
+            xx, yy, zz = l2gMatrix(rm,unit_up)
+            # dx,dy,dz = p2e(aa,rr)
+
             drawnow(draw_fig)
+            # if len(T)>2:
+            #     xx += dx * (T[-1]-T[-2])
+            #     yy += dy * (T[-1]-T[-2]) 
+            #     zz += dz * (T[-1]-T[-2])
+            #     drawnow(draw_fig)
 
     # t.append(float(dat[0]))
     # x.append(float(dat[2]))
@@ -99,14 +116,14 @@ while True:
 # print(A)
 # print(O)
 
-V = imu2V(T, A, O)
-X = imu2X(T, A, O)
+# V = imu2V(T, A, O)
+# X = imu2X(T, A, O)
 
-print(X.shape) 
-fig = plt.figure()
-plt.plot(X[:,0],X[:,1],'-x')
-plt.savefig('xy.png')
+# print(X.shape) 
+# fig = plt.figure()
+# plt.plot(X[:,0],X[:,1],'-x')
+# plt.savefig('xy.png')
 
-fig = plt.figure()
-plt.plot(V[:,0],V[:,1],'-x')
-plt.savefig('VxVy.png')
+# fig = plt.figure()
+# plt.plot(V[:,0],V[:,1],'-x')
+# plt.savefig('VxVy.png')

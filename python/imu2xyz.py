@@ -24,13 +24,21 @@ def rot_mat(a,b,t, deg=True): # z,y,x
     [R11, R12, R13],
     [R21, R22, R23],
     [R31, R32, R33],
-  ]i
+  ]
 
   return np.array(R)
 
 def p2e(v,r):
   R = rot_mat(*r)
   return np.matmul(R.T,v)
+
+def l2gMatrix(R,a):
+  """
+  R: [9] rotation matrix vector
+  a: [3] vector
+  """
+  r = np.reshape(R,(3,3))
+  return np.matmul(r.T, a)
 
 
 def fixEnd(v4, v3_end):
