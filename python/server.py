@@ -27,7 +27,7 @@ def parse_stream(line):
     # }
     dat = line.split(b'\t')
     sensor_data = {}
-    sensor_data['t'] = float(dat[1])/.000000001 # nanoseconds
+    sensor_data['t'] = float(dat[1])*.000000001 # nanoseconds
     key = dat[2].decode('ascii').strip()
     var = STREAM_ID[key]
     # sensor_data[var] = [float(x) for x in dat[i+1:i+4]]
