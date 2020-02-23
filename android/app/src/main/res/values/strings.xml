@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">SensorForward</string>
+    <string name="sensorName">sensorName</string>
+    <string name="sensorCheck">sensorCheck</string>
+    <string name="upd_destination">UPD Destination</string>
+    <string name="stop">Stop</string>
+    <string name="start">Start</string>
+    <string name="udp_dest">UDP Dest:</string>
+    <string name="log_to_file">Log to file</string>
+    <string name="_0">0</string>
+    <string name="sensors">Select Sensors</string>
+</resources>

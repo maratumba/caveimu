@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="vertical"
+    android:weightSum="100"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/activity_main">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/tools_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#E91E63"
+        android:padding="3dp"
+        tools:layout_editor_absoluteY="512dp">
+
+        <EditText
+            android:id="@+id/txtUDP"
+            android:layout_width="325dp"
+            android:layout_height="45dp"
+            android:gravity="center_vertical"
+            android:inputType="textUri|text"
+            app:layout_constraintBottom_toBottomOf="@+id/txtUDPLabel"
+            app:layout_constraintEnd_toEndOf="@+id/btnSensors"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/txtUDPLabel"
+            tools:text="127.0.0.1:5000" />
+
+        <TextView
+            android:id="@+id/txtUDPLabel"
+            android:layout_width="84dp"
+            android:layout_height="45dp"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="@string/udp_dest"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/chkLog"
+            app:layout_constraintStart_toStartOf="@+id/btnSensors"
+            app:layout_constraintTop_toBottomOf="@+id/btnSensors" />
+
+        <CheckBox
+            android:id="@+id/chkLog"
+            android:layout_width="372dp"
+            android:layout_height="30dp"
+            android:text="@string/log_to_file"
+            app:layout_constraintStart_toStartOf="@+id/txtUDPLabel"
+            app:layout_constraintTop_toBottomOf="@+id/txtUDP" />
+
+        <EditText
+            android:id="@+id/txtStation"
+            android:layout_width="200dp"
+            android:layout_height="56dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:inputType="text"
+            android:text="@string/_0"
+            android:textSize="30sp"
+            app:layout_constraintStart_toStartOf="@+id/chkLog"
+            app:layout_constraintTop_toBottomOf="@+id/chkLog" />
+
+        <Button
+            android:id="@+id/btnStartStop"
+            android:layout_width="172dp"
+            android:layout_height="56dp"
+            android:background="#9C27B0"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/start"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/btnSensors"
+            app:layout_constraintTop_toBottomOf="@+id/chkLog" />
+
+        <Button
+            android:id="@+id/btnSensors"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="#673AB7"
+            android:text="@string/sensors"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>

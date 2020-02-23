@@ -3,3 +3,4 @@
 venv
 *png
 .DS_Store
+/android/keystore/AppKey.jks
