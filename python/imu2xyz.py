@@ -38,7 +38,7 @@ def l2gMatrix(R,a):
   a: [3] vector
   """
   r = np.reshape(R,(3,3))
-  return np.matmul(r.T, a)
+  return np.matmul(r, a)
 
 
 def fixEnd(v4, v3_end):
